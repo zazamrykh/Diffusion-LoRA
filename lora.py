@@ -114,3 +114,13 @@ def enable_lora(model, output=True):
             module_.is_active = True
             if output:
                 print(f"LoRA enabled: {name}")
+                
+
+def count_lora_parameters(model):
+    """ Counts the number of trainable parameters in all LoRA layers of a given model."""
+    total_params = 0
+    for module_ in model.modules():
+        if isinstance(module_, LoRALinear):
+            lora_params = module_.lora_A.numel() + module_.lora_B.numel()
+            total_params += lora_params
+    return total_params
